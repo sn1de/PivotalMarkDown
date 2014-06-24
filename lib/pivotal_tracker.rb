@@ -16,4 +16,12 @@ class PivotalTracker
                    :content_type => 'application/json', :accept => :json, :'X-TrackerToken' => @token)
   end
 
+  def get_release_stories(projects, release_label)
+
+    projects.flat_map { |p|
+      story_summary(get_project_release_stories(p, release_label))
+    }
+
+  end
+
 end

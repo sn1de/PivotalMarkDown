@@ -22,16 +22,16 @@ end
 
 option_parser.parse!
 
-piv = PivotalTracker.new(options[:token])
+projects = options[:project].split(',')
 
-stories_json = piv.get_project_release_stories(options[:project], options[:release])
+piv = PivotalTracker.new(options[:token])
+stories = piv.get_release_stories(projects, options[:release])
 
 puts MarkMaker.header1("Release " + options[:release])
 
-stories = story_summary(stories_json)
+# stories = story_summary(stories_json)
 puts MarkMaker.header2("Total Stories: #{stories.size}")
 
 stories.each { |story|
   puts MarkMaker.bullet("#{ story['name'] } : #{story['description']} (#{ MarkMaker.link(story['id'], story['url']) })")
 }
-# puts story_summary(stories)
