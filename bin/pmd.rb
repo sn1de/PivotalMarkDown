@@ -3,12 +3,20 @@
 require 'optparse'
 require 'pivotal_tracker'
 require 'pivotal_markdown'
-
+require 'mark_maker'
 options = {}
 
 option_parser = OptionParser.new do |opts|
   opts.on("-t", "--token T", "Pivotal API token") do |t|
     options[:token] = t
+  end
+
+  opts.on("-r", "--release R", "Release label in pivotal") do |r|
+    options[:release] = r
+  end
+
+  opts.on("-p", "--project P", "Pivotal tracker project number") do |p|
+    options[:project] = p
   end
 end
 
@@ -16,14 +24,14 @@ option_parser.parse!
 
 piv = PivotalTracker.new(options[:token])
 
-# puts piv.get_story(72257134)
+stories_json = piv.get_project_release_stories(options[:project], options[:release])
 
-stories_json = piv.get_project_release_stories("29622", "web-2.54.0")
+puts MarkMaker.header1("Release " + options[:release])
+
 stories = story_summary(stories_json)
-puts "Total Stories: #{stories.size}"
+puts MarkMaker.header2("Total Stories: #{stories.size}")
+
 stories.each { |story|
-  puts "-----------------------------------------------------------"
-  puts "#{story['id']} - #{story['name']}"
-  puts story['description']
+  puts MarkMaker.bullet("#{ story['name'] } : #{story['description']} (#{ MarkMaker.link(story['id'], story['url']) })")
 }
 # puts story_summary(stories)
