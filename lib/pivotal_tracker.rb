@@ -24,4 +24,11 @@ class PivotalTracker
 
   end
 
+  def get_iteration_stories(project, iteration)
+
+    iteration_json = RestClient.get("https://www.pivotaltracker.com/services/v5/projects/#{project}/iterations?limit=1&offset=#{iteration.to_i - 1}",
+                   :content_type => 'application/json', :accept => :json, :'X-TrackerToken' => @token)
+    iteration_stories(iteration_json)
+  end
+
 end
