@@ -12,7 +12,7 @@ class PivotalTracker
   end
 
   def get_project_release_stories(project, release_label)
-    RestClient.get("https://www.pivotaltracker.com/services/v5/projects/#{project}/stories?filter=label%3A#{release_label}",
+    RestClient.get("https://www.pivotaltracker.com/services/v5/projects/#{project}/stories?filter=label%3A#{release_label}%20includedone:true",
                    :content_type => 'application/json', :accept => :json, :'X-TrackerToken' => @token)
   end
 
