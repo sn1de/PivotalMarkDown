@@ -5,6 +5,7 @@ require 'pivotal_tracker'
 require 'pivotal_markdown'
 require 'mark_maker'
 require 'pp'
+require 'yaml'
 
 options = {}
 
@@ -23,6 +24,10 @@ option_parser = OptionParser.new do |opts|
 
   opts.on("-i", "--iteration I", "Pivotal tracker iteration number") do |i|
     options[:iteration] = i
+  end
+
+  opts.on("-s", "--save", "Save the configuration options as a YAML file") do |s|
+    options[:save] = s
   end
 end
 
@@ -61,3 +66,11 @@ if (options[:iteration])
     }
   end
 end
+
+if (options[:save])
+  puts "Saving options ..."
+  # don't forget to remove the save option
+  puts YAML.dump(options)
+  puts "done."
+end
+
