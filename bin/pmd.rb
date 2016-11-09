@@ -37,19 +37,19 @@ end
 option_parser.parse!
 
 if (options[:release])
-  puts "Generating release report ..."
   projects = options[:project].split(',')
 
   piv = PivotalTracker.new(options[:token])
   stories = piv.get_release_stories(projects, options[:release])
 
-  puts MarkMaker.header1("Release " + options[:release])
+  gen = MarkMaker::Generator.new
+  puts ("Release " + options[:release]).header1
 
   # stories = story_summary(stories_json)
-  puts MarkMaker.header2("Total Stories: #{stories.size}")
+  puts "Total Stories: #{stories.size}".header2
 
   stories.each { |story|
-    puts MarkMaker.bullet("#{ story['name'] } : #{story['description']} (#{ MarkMaker.link(story['id'], story['url']) })")
+    puts ("#{ story['name'] } : #{story['description']} (#{ gen.link(story['id'], story['url']) })").bullet
   }
 end
 
@@ -63,9 +63,9 @@ if (options[:iteration])
     piv = PivotalTracker.new(options[:token])
     stories = piv.get_iteration_stories(options[:project], options[:iteration])
     
-    puts MarkMaker.header1("Iteration #{options[:iteration]}")
+    puts "Iteration #{options[:iteration]}".header1
     stories.each { |story|
-      puts MarkMaker.bullet("#{ story['name'] } : #{story['description']} (#{ MarkMaker.link(story['id'], story['url']) })")
+      puts "#{ story['name'] } : #{story['description']} (#{ gen.link(story['id'], story['url']) })".bullet
     }
   end
 end
